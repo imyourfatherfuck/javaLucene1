@@ -111,7 +111,7 @@ public class LuceneTester {
         }
 
 
-        System.out.println(yearList);
+       // System.out.println(yearList);
         searcher.close();
 
 
