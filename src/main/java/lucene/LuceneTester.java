@@ -1,10 +1,10 @@
 package lucene;
 
 import chart.*;
+import com.alibaba.fastjson.JSON;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.jfree.chart.ChartPanel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -49,6 +49,8 @@ public class LuceneTester {
 
         System.out.println("查到到匹配索引文件" + hits.totalHits + "个");
         HashSet<Data> yearList = new HashSet<Data>();
+
+        Map<String, Object> maps = new HashMap<String, Object>();
         for (ScoreDoc scoreDoc : hits.scoreDocs) {
             Document doc = searcher.getDocument(scoreDoc);
             System.out.println("文件: " + doc.get(LuceneConstants.FILE_PATH));
@@ -96,6 +98,11 @@ public class LuceneTester {
 
 
                         //根据月和天 生成折线图
+                        Years year1 = addMap(year, maps);
+                        year1.getMonths().get(month-1).setCount(year1.getMonths().get(month-1).getCount() + 1);
+                        year1.getMonths().get(month-1).getDays().get(day-1).setCount(year1.getMonths().get(month-1).getDays().get(day-1).getCount() + 1);
+                        maps.put(String.valueOf(year), year1);
+
                     }
 
                 }
@@ -103,6 +110,7 @@ public class LuceneTester {
 
 
         }
+        System.out.println(maps);
         System.out.println(yearList);
         searcher.close();
 
@@ -143,6 +151,51 @@ public class LuceneTester {
             e1.printStackTrace();
         }
     }
+
+
+    public static Years addMap(int year, Map<String, Object> maps) {
+
+
+        if (maps.get(String.valueOf(year)) == null) {
+            List<MonthCounter> monthCounterList = new ArrayList<MonthCounter>();
+
+
+            Calendar c = Calendar.getInstance();
+
+            Years years = new Years();
+            for (int i = 0; i < 12; i++) {
+                MonthCounter monthCounter = new MonthCounter();
+                monthCounter.setCount(0);
+                monthCounter.setMonth(i + 1);
+
+                c.set(year, i, 1);
+                int lastDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+                List<DayCounter> dayCounterList = new ArrayList<DayCounter>();
+                for (int x = 1; x <= lastDay; x++) {
+
+                    DayCounter dayCounter = new DayCounter();
+                    dayCounter.setCount(0);
+                    dayCounter.setDay(x);
+                    dayCounterList.add(dayCounter);
+
+                }
+                monthCounter.setDays(dayCounterList);
+
+                monthCounterList.add(monthCounter);
+            }
+
+
+            years.setMonths(monthCounterList);
+            maps.put(String.valueOf(year), years);
+
+        }
+
+
+        Years fromJson = JSON.parseObject(JSON.toJSONString(maps.get(String.valueOf(year))), Years.class);
+//        System.out.println(fromJson);
+        return fromJson;
+    }
+
 
     public static void addSet(int year, int month, Set<Data> yearList) {
         Data data = new Data();
