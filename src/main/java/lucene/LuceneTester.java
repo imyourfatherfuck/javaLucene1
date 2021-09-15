@@ -1,8 +1,6 @@
 package lucene;
 
-import chart.CreatLineChart;
-import chart.Data;
-import chart.Serie;
+import chart.*;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
@@ -20,7 +18,7 @@ public class LuceneTester {
     String indexDir = "E:\\Lucene\\ectest\\Index";
     String dataDir = "E:\\Lucene\\ectest\\Data";
     String imgurl = "E:\\lucene\\折线图.png";
-//    String imgurl1 = "E:\\lucene\\折线图1.png";
+    //    String imgurl1 = "E:\\lucene\\折线图1.png";
     static String keyword = "CHANGYU";
     Indexer indexer;
     Searcher searcher;
@@ -72,17 +70,20 @@ public class LuceneTester {
                         Date txtdate = format.parse(str);
                         Calendar ca = Calendar.getInstance();
                         ca.setTime(txtdate);
+
+                        int day = ca.get(Calendar.DATE); //天数
+
                         int month = ca.get(Calendar.MONTH) + 1;//第几个月
 
                         int year = ca.get(Calendar.YEAR);//年份数值
-                        // 标识
+                        // 标识 生成总折线图
                         boolean flag = false;
                         if (yearList.size() > 0) {
                             for (Data data : yearList) {
                                 if (data.getYear() == year) {
-                                    Integer[] months = data.getMonth();
+                                    Integer[] months = data.getMonths();
                                     months[month - 1] += 1;
-                                    data.setMonth(months);
+                                    data.setMonths(months);
                                     flag = true;
                                 }
                             }
@@ -94,6 +95,7 @@ public class LuceneTester {
                         }
 
 
+                        //根据月和天 生成折线图
                     }
 
                 }
@@ -122,7 +124,7 @@ public class LuceneTester {
             if (yearList != null && yearList.size() > 0) {
 
                 for (Data data : yearList) {
-                    series.add(new Serie(data.getYear().toString(), data.getMonth()));
+                    series.add(new Serie(data.getYear().toString(), data.getMonths()));
 
                 }
             }
@@ -145,9 +147,9 @@ public class LuceneTester {
     public static void addSet(int year, int month, Set<Data> yearList) {
         Data data = new Data();
         data.setYear(year);
-        Integer[] months = data.getMonth();
+        Integer[] months = data.getMonths();
         months[month - 1] += 1;
-        data.setMonth(months);
+        data.setMonths(months);
         yearList.add(data);
     }
 
