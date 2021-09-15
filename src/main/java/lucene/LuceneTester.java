@@ -19,7 +19,7 @@ public class LuceneTester {
     String indexDir = "E:\\Lucene\\ectest\\Index";
     String dataDir = "E:\\Lucene\\ectest\\Data";
     String imgurl = "E:\\lucene\\折线图.png";
-    //    String imgurl1 = "E:\\lucene\\折线图1.png";
+    String imgurl1 = "E:\\lucene\\折线图1.png";
     static String keyword = "CHANGYU";
     Indexer indexer;
     Searcher searcher;
@@ -111,12 +111,6 @@ public class LuceneTester {
 
         }
 
-        for (Object key : maps.keySet()) {
-            Years fromJson = JSON.parseObject(JSON.toJSONString(maps.get(String.valueOf(key))), Years.class);
-            //画图
-            System.out.println(123);
-        }
-
 
         System.out.println(yearList);
         searcher.close();
@@ -134,12 +128,12 @@ public class LuceneTester {
             series = new Vector<Serie>();
             // 柱子名称：柱子所有的值集合
             //纵坐标
-            series.add(new Serie("Tokyo", new Integer[]{49, 71, 106, 129, 144, 176, 135, 148, 216, 194, 95, 54}));
-            series.add(new Serie("New York", new Integer[]{83, 78, 98, 93, 106, 84, 105, 104, 91, 83, 106, 92}));
+//            series.add(new Serie("Tokyo", new Integer[]{49, 71, 106, 129, 144, 176, 135, 148, 216, 194, 95, 54}));
+//            series.add(new Serie("New York", new Integer[]{83, 78, 98, 93, 106, 84, 105, 104, 91, 83, 106, 92}));
             if (yearList != null && yearList.size() > 0) {
 
                 for (Data data : yearList) {
-                    series.add(new Serie(data.getYear().toString(), data.getMonths()));
+                    series.add(new Serie(data.getYear().toString()+"总图", data.getMonths()));
 
                 }
             }
@@ -153,6 +147,27 @@ public class LuceneTester {
             creatLineChart.CreateNewLineChartForPng("折线图.png", "月份", "出现次数", imgurl, categorie, series, 1350, 750);
 
 //            creatLineChart.CreateNewLineChartForPng1("折线图1.png", "月份", "出现次数", imgurl1, categorie, series, 1350, 750);
+
+
+            for (Object key : maps.keySet()) {
+                Years fromJson = JSON.parseObject(JSON.toJSONString(maps.get(String.valueOf(key))), Years.class);
+
+                //12个月
+                for (int i = 0; i < fromJson.getMonths().size(); i++) {
+                    List<String> categorys = new ArrayList<String>();
+                    Integer[] days = new Integer[fromJson.getMonths().get(i).getDays().size()];
+                    //画图
+                    for (int k = 0; k < fromJson.getMonths().get(i).getDays().size(); k++) {
+                        categorys.add(fromJson.getMonths().get(i).getDays().get(k).getDay() + "日");
+                        days[k] = fromJson.getMonths().get(i).getDays().get(k).getCount();
+                        System.out.println(i+"--"+k);
+                    }
+                    series.add(new Serie(String.valueOf(key), days));
+                    creatLineChart.CreateNewLineChartForPng("折线图1.png", (i+1)+"月份", "出现次数", imgurl1, categorys, series, 1350, 750);
+                }
+
+
+            }
             System.out.println("生成图片成功");
         } catch (Exception e1) {
             e1.printStackTrace();
