@@ -18,8 +18,8 @@ public class LuceneTester {
 
     String indexDir = "E:\\Lucene\\ectest\\Index";
     String dataDir = "E:\\Lucene\\ectest\\Data";
-    String imgurl = "E:\\lucene\\折线图.png";
-    String imgurl1 = "E:\\lucene\\折线图1.png";
+    String baseImgurl = "E:\\lucene\\image\\";
+    String baseImgurlMid = "E:\\lucene\\image\\mid\\";
     static String keyword = "CHANGYU";
     Indexer indexer;
     Searcher searcher;
@@ -133,7 +133,7 @@ public class LuceneTester {
             if (yearList != null && yearList.size() > 0) {
 
                 for (Data data : yearList) {
-                    series.add(new Serie(data.getYear().toString()+"总图", data.getMonths()));
+                    series.add(new Serie(data.getYear().toString() + "总图", data.getMonths()));
 
                 }
             }
@@ -144,12 +144,14 @@ public class LuceneTester {
 //            frame.setVisible(true);
             //将图片保存为png格式
 //            saveAsFile(chartPanel.getChart(),"D:\\1\\lol.png",900,500);
-            creatLineChart.CreateNewLineChartForPng("折线图.png", "月份", "出现次数", imgurl, categorie, series, 1350, 750);
+            creatLineChart.CreateNewLineChartForPng("折线图.png", "月份", "出现次数", baseImgurl + "折线图.png", categorie, series, 1350, 750);
 
 //            creatLineChart.CreateNewLineChartForPng1("折线图1.png", "月份", "出现次数", imgurl1, categorie, series, 1350, 750);
 
-
+            int num = 0;
+            series = new Vector<Serie>();
             for (Object key : maps.keySet()) {
+                num += 1;
                 Years fromJson = JSON.parseObject(JSON.toJSONString(maps.get(String.valueOf(key))), Years.class);
 
                 //12个月
@@ -160,18 +162,25 @@ public class LuceneTester {
                     for (int k = 0; k < fromJson.getMonths().get(i).getDays().size(); k++) {
                         categorys.add(fromJson.getMonths().get(i).getDays().get(k).getDay() + "日");
                         days[k] = fromJson.getMonths().get(i).getDays().get(k).getCount();
-                        System.out.println(i+"--"+k);
                     }
                     series.add(new Serie(String.valueOf(key), days));
-                    creatLineChart.CreateNewLineChartForPng("折线图1.png", (i+1)+"月份", "出现次数", imgurl1, categorys, series, 1350, 750);
-                }
 
+                    if (num == maps.size()) {
+                        String fileName = (i + 1) + "月" + "折线图.png";
+                        creatLineChart.CreateNewLineChartForPng(fileName, (i + 1) + "月份", "出现次数", baseImgurl + fileName, categorys, series, 1350, 750);
+                    }
+                }
 
             }
             System.out.println("生成图片成功");
-        } catch (Exception e1) {
+        } catch (
+                Exception e1
+                )
+
+        {
             e1.printStackTrace();
         }
+
     }
 
 

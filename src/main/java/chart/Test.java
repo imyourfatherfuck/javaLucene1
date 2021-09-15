@@ -48,6 +48,18 @@ public class Test {
 //        Years fromJson = JSON.parseObject(JSON.toJSONString(maps.get("2016")), Years.class);
 //        System.out.println(fromJson);
 
+        List<Integer> list = new ArrayList<Integer>();
+
+        int num = 0;
+        for (int i = 0; i < 2; i++) {
+            num += 1;
+
+            for (int k = 0; k < 12; k++) {
+                list.add(111);
+            }
+        }
+        System.out.println(1);
+
     }
 
 }
