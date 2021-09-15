@@ -36,6 +36,7 @@ public class Serie implements Serializable {
      */
     public Serie(String name, Object[] array) {
         this.name = name;
+//        System.out.println(name);
         if (array != null) {
             data = new Vector<Object>(array.length);
             for (int i = 0; i < array.length; i++) {
