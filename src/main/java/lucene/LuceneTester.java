@@ -2,6 +2,7 @@ package lucene;
 
 import chart.*;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
@@ -99,8 +100,8 @@ public class LuceneTester {
 
                         //根据月和天 生成折线图
                         Years year1 = addMap(year, maps);
-                        year1.getMonths().get(month-1).setCount(year1.getMonths().get(month-1).getCount() + 1);
-                        year1.getMonths().get(month-1).getDays().get(day-1).setCount(year1.getMonths().get(month-1).getDays().get(day-1).getCount() + 1);
+                        year1.getMonths().get(month - 1).setCount(year1.getMonths().get(month - 1).getCount() + 1);
+                        year1.getMonths().get(month - 1).getDays().get(day - 1).setCount(year1.getMonths().get(month - 1).getDays().get(day - 1).getCount() + 1);
                         maps.put(String.valueOf(year), year1);
 
                     }
@@ -110,7 +111,14 @@ public class LuceneTester {
 
 
         }
-        System.out.println(maps);
+
+        for (Object key : maps.keySet()) {
+            Years fromJson = JSON.parseObject(JSON.toJSONString(maps.get(String.valueOf(key))), Years.class);
+            //画图
+            System.out.println(123);
+        }
+
+
         System.out.println(yearList);
         searcher.close();
 
