@@ -109,7 +109,6 @@ public class LuceneTester {
                 }
             }
 
-
         }
 
         for (Object key : maps.keySet()) {
