@@ -158,6 +158,10 @@ public class LuceneTester {
                 for (int i = 0; i < fromJson.getMonths().size(); i++) {
                     List<String> categorys = new ArrayList<String>();
                     Integer[] days = new Integer[fromJson.getMonths().get(i).getDays().size()];
+                    if (i == 1) {
+                        days = new Integer[29];
+                    }
+
                     //画图
                     for (int k = 0; k < fromJson.getMonths().get(i).getDays().size(); k++) {
                         categorys.add(fromJson.getMonths().get(i).getDays().get(k).getDay() + "日");
