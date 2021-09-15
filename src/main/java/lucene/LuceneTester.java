@@ -19,7 +19,6 @@ public class LuceneTester {
     String indexDir = "E:\\Lucene\\ectest\\Index";
     String dataDir = "E:\\Lucene\\ectest\\Data";
     String baseImgurl = "E:\\lucene\\image\\";
-    String baseImgurlMid = "E:\\lucene\\image\\mid\\";
     static String keyword = "CHANGYU";
     Indexer indexer;
     Searcher searcher;
@@ -151,6 +150,7 @@ public class LuceneTester {
             int num = 0;
             series = new Vector<Serie>();
             for (Object key : maps.keySet()) {
+                List<Serie> dataList = new ArrayList<Serie>();
                 num += 1;
                 Years fromJson = JSON.parseObject(JSON.toJSONString(maps.get(String.valueOf(key))), Years.class);
 
@@ -163,13 +163,19 @@ public class LuceneTester {
                         categorys.add(fromJson.getMonths().get(i).getDays().get(k).getDay() + "日");
                         days[k] = fromJson.getMonths().get(i).getDays().get(k).getCount();
                     }
+
                     series.add(new Serie(String.valueOf(key), days));
 
+
                     if (num == maps.size()) {
+                        for (int a = 0; a < num; a++) {
+                            dataList.add(series.get(a * 12 + i));
+                        }
                         String fileName = (i + 1) + "月" + "折线图.png";
-                        creatLineChart.CreateNewLineChartForPng(fileName, (i + 1) + "月份", "出现次数", baseImgurl + fileName, categorys, series, 1350, 750);
+                        creatLineChart.CreateNewLineChartForPng(fileName, (i + 1) + "月份", "出现次数", baseImgurl + fileName, categorys, dataList, 1350, 750);
                     }
                 }
+
 
             }
             System.out.println("生成图片成功");
